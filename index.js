@@ -12,6 +12,7 @@ const cookieParser = require('cookie-parser');
 const productRoute = require('./routes/productRoute');
 const blogRouter = require('./routes/blogRoute');
 const categoryRouter = require('./routes/prodCategoryRoute');
+const blogcategoryRouter = require("./routes/blogCatRoute");
 const morgan = require('morgan')
 
 dbConnect();
@@ -24,6 +25,7 @@ app.use('/api/user', authRoute);
 app.use('/api/product', productRoute);
 app.use('/api/blog', blogRouter);
 app.use('/api/category', categoryRouter);
+app.use("/api/blogcategory", blogcategoryRouter);
 //mekata yatin mewa thiyen oona
 app.use(notFound);
 app.use(errorHandler);

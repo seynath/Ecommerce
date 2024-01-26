@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const categorySchema = new mongoose.Schema({
+const proCategorySchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -9,4 +9,4 @@ const categorySchema = new mongoose.Schema({
     }, 
   }, { timestamps: true });
 
-module.exports = mongoose.model('PCategory', categorySchema);
+module.exports = mongoose.model('PCategory', proCategorySchema);
