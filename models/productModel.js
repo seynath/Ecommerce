@@ -41,19 +41,32 @@ const productSchema = new mongoose.Schema(
       default: 0,
       //select: false, meka dunna gaman ena load ekee eka pennan na
     },
-    images: {
-      type: Array,
-    },
+    // images: {
+    //   type: Array,
+    // },
+    // images:[
+    //   {
+    //     public_id: String,
+    //     url: String,
+    //   }
+    // ],
+
+    images:[],
     color: {
       type: String,
       required:true,
     },
-    ratings: {
-      type: Number,
+    ratings: [{
+      star: Number,
+      comment: String,
       postedby: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
+    }],
+    totalrating: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

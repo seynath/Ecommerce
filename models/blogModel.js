@@ -38,10 +38,7 @@ var blogSchema = new mongoose.Schema({
     }],
     
 
-    image: {
-        type: String,
-        default: 'https://media.designcafe.com/wp-content/uploads/2020/05/18183844/easy-diy-wall-art-ideas-for-your-home.jpg'
-    },
+    image: [],
     author: {
         type: String,
         default: 'Admin'
