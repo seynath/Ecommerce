@@ -156,9 +156,7 @@ const createProduct = asyncHandler(async (req, res) => {
         let alreadyRated = product.ratings.find(
           (userId) => userId.postedby.toString() === _id.toString()
         );
-        // let alreadyRated = product.ratings.find(
-        //   (userId) => userId.postedby && userId.postedby.toString() === _id.toString()
-        // );
+      
         
         if (alreadyRated) {
           const updateRating = await Product.updateOne(
