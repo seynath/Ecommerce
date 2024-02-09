@@ -16,6 +16,7 @@ const blogcategoryRouter = require("./routes/blogCatRoute");
 const brandRouter = require("./routes/brandRoute");
 const couponRouter = require("./routes/couponRoute");
 const morgan = require('morgan')
+const colorRouter = require("./routes/colorRoute");
 
 dbConnect();
 app.use(morgan("dev"))
@@ -30,6 +31,9 @@ app.use('/api/category', categoryRouter);
 app.use("/api/blogcategory", blogcategoryRouter);
 app.use("/api/brand", brandRouter);
 app.use("/api/coupon",couponRouter);
+app.use("/api/color", colorRouter);
+
+
 //mekata yatin mewa thiyen oona
 app.use(notFound);
 app.use(errorHandler);
@@ -38,4 +42,3 @@ app.use(errorHandler);
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
- 
