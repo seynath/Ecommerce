@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'seynath/ecomadmin' 
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Clone the repository that contains your Node.js app and Dockerfile
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/seynath/Ecommerce-all.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Install Node.js dependencies
+                dir('admin') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Build Application') {
+            steps {
+                // Build the Node.js app
+                dir('admin') {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Retrieve credentials and inject as environment variables
+                    withCredentials([
+                        string(credentialsId: 'vite_base_url', variable: 'VITE_BASE_URL')
+                    ]) {
+                        def commitId = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                        dir('admin') {
+                            sh """
+                                docker build --build-arg VITE_BASE_URL=${VITE_BASE_URL} -t ${DOCKER_IMAGE}:${BUILD_NUMBER} .
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Publish Docker Image') {
+            steps {
+                // Log in to Docker Hub
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                }
+                // Push the image to Docker Hub
+                script {
+                    def commitId = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                    sh "docker push ${DOCKER_IMAGE}:${BUILD_NUMBER}"
+                }
+            }
+        }
+        
+        stage('Trigger CD Pipeline') {
+            steps {
+                // Trigger another job
+                build job: 'adminCD', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
+            }
+        }
+    }
+}
